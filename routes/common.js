@@ -1,4 +1,4 @@
-// GET LOGGED-IN USER PROFILE (EMPLOYEE OR MANAGER)
+
 router.get("/me", (req, res) => {
   if (!req.user || !req.user.id) {
     return res.status(401).json({ message: "Unauthorized" });

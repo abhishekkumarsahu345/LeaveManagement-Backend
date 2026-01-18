@@ -2,7 +2,7 @@ const express = require("express");
 const db = require("../db");
 const router = express.Router();
 
-/* ================= MANAGER PROFILE ================= */
+
 router.get("/manager/profile", (req, res) => {
   if (!req.user || req.user.role !== "manager") {
     return res.status(403).json({ message: "Forbidden" });
@@ -20,7 +20,7 @@ router.get("/manager/profile", (req, res) => {
   );
 });
 
-/* ================= VIEW PENDING REQUESTS ================= */
+
 router.get("/manager/requests", (req, res) => {
   if (!req.user || req.user.role !== "manager") {
     return res.status(403).json({ message: "Forbidden" });
@@ -47,7 +47,7 @@ router.get("/manager/requests", (req, res) => {
   );
 });
 
-/* ================= APPROVE REQUEST (FIXED) ================= */
+
 router.post("/manager/approve", (req, res) => {
   if (!req.user || req.user.role !== "manager") {
     return res.status(403).json({ message: "Forbidden" });
@@ -69,7 +69,7 @@ router.post("/manager/approve", (req, res) => {
 
       const leave = rows[0];
 
-      // ✅ Prevent double approval
+      
       if (leave.status !== "pending") {
         return res
           .status(400)
@@ -81,7 +81,7 @@ router.post("/manager/approve", (req, res) => {
           (1000 * 60 * 60 * 24) +
         1;
 
-      // ✅ Check balance FIRST
+      
       db.query(
         "SELECT remaining_leaves FROM leave_balance WHERE employee_id = ?",
         [leave.employee_id],
@@ -100,7 +100,7 @@ router.post("/manager/approve", (req, res) => {
               .json({ message: "Insufficient leave balance" });
           }
 
-          // ✅ Deduct balance
+         
           db.query(
             "UPDATE leave_balance SET remaining_leaves = remaining_leaves - ? WHERE employee_id = ?",
             [days, leave.employee_id],
@@ -111,7 +111,7 @@ router.post("/manager/approve", (req, res) => {
                   .json({ message: "Failed to update balance" });
               }
 
-              // ✅ Approve request
+              
               db.query(
                 "UPDATE leave_requests SET status='approved', manager_comment=? WHERE id=?",
                 [comment || "Approved", requestId],
@@ -129,7 +129,7 @@ router.post("/manager/approve", (req, res) => {
 
 
 
-/* ================= REJECT REQUEST ================= */
+
 router.post("/manager/reject", (req, res) => {
   if (!req.user || req.user.role !== "manager") {
     return res.status(403).json({ message: "Forbidden" });

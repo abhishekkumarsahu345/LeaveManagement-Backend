@@ -2,7 +2,6 @@ const express = require("express");
 const db = require("../db");
 const router = express.Router();
 
-/* ================= VIEW PENDING REQUESTS ================= */
 router.get("/manager/requests", (req, res) => {
   if (!req.user || req.user.role !== "manager") {
     return res.status(403).json({ message: "Forbidden" });
@@ -35,7 +34,7 @@ module.exports = (req, res, next) => {
   next();
 };
 
-/* ================= APPROVE REQUEST ================= */
+
 router.post("/manager/approve", (req, res) => {
   if (!req.user || req.user.role !== "manager") {
     return res.status(403).json({ message: "Forbidden" });
@@ -57,7 +56,6 @@ router.post("/manager/approve", (req, res) => {
           (1000 * 60 * 60 * 24) +
         1;
 
-      // ✅ Check balance first
       db.query(
         "SELECT remaining_leaves FROM leave_balance WHERE employee_id=?",
         [leave.employee_id],
@@ -68,13 +66,12 @@ router.post("/manager/approve", (req, res) => {
               .json({ message: "Insufficient leave balance" });
           }
 
-          // deduct balance
+        
           db.query(
             "UPDATE leave_balance SET remaining_leaves = remaining_leaves - ? WHERE employee_id=?",
             [days, leave.employee_id]
           );
 
-          // approve request
           db.query(
             "UPDATE leave_requests SET status='approved' WHERE id=?",
             [requestId]
@@ -87,7 +84,7 @@ router.post("/manager/approve", (req, res) => {
   );
 });
 
-/* ================= REJECT REQUEST ================= */
+
 router.post("/manager/reject", (req, res) => {
   if (!req.user || req.user.role !== "manager") {
     return res.status(403).json({ message: "Forbidden" });

@@ -2,7 +2,7 @@ const express = require("express");
 const db = require("../db");
 const router = express.Router();
 
-/* ================= EMPLOYEE PROFILE ================= */
+
 router.get("/employee/profile", (req, res) => {
   if (!req.user || req.user.role !== "employee") {
     return res.status(403).json({ message: "Forbidden" });
@@ -20,7 +20,7 @@ router.get("/employee/profile", (req, res) => {
   );
 });
 
-/* ================= LEAVE BALANCE ================= */
+
 router.get("/leave/balance", (req, res) => {
   if (!req.user || req.user.role !== "employee") {
     return res.status(403).json({ message: "Forbidden" });
@@ -38,7 +38,7 @@ router.get("/leave/balance", (req, res) => {
   );
 });
 
-/* ================= APPLY LEAVE ================= */
+
 router.post("/leave/apply", (req, res) => {
   if (!req.user || req.user.role !== "employee") {
     return res.status(403).json({ message: "Forbidden" });
@@ -63,7 +63,7 @@ router.post("/leave/apply", (req, res) => {
     () => res.json({ message: "Leave sent for approval" })
   );
 });
-/* ================= LEAVE CALENDAR ================= */
+
 router.get("/leave/calendar", (req, res) => {
   if (req.user.role !== "employee") {
     return res.status(403).json({ message: "Forbidden" });
@@ -85,7 +85,7 @@ router.get("/leave/calendar", (req, res) => {
 });
 
 
-/* ================= LEAVE HISTORY ================= */
+
 router.get("/leave/history", (req, res) => {
   if (!req.user) {
     return res.status(403).json({ message: "Forbidden" });
